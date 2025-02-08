@@ -1,11 +1,32 @@
-import { motion } from 'motion/react';
+import { useSupabaseSessionEffect } from '@/app/supabase/hooks/useSupabaseSessionEffect.ts';
+import { AuthService } from '@/entities/auth/services/AuthService.ts';
+import useStore from '@/shared/hooks/useStore.ts';
+import { uesAuthStore } from '@/entities/auth/hooks';
 
 function App() {
-  return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-      Motion HI!
-    </motion.div>
+  const { signIn, signOut } = new AuthService();
+  const { isLoadingStore: isLoadingAuthStore, store } = useStore(
+    uesAuthStore,
+    (state) => state,
   );
+
+  useSupabaseSessionEffect();
+
+  if (isLoadingAuthStore || !store) {
+    return null;
+  }
+
+  const { isLoggedIn } = store;
+
+  if (!isLoggedIn) {
+    return (
+      <button onClick={() => signIn({ provider: 'kakao' })}>로그인</button>
+    );
+  } else {
+    return (
+      <button onClick={() => signOut({ provider: 'kakao' })}>로그아웃</button>
+    );
+  }
 }
 
 export default App;
