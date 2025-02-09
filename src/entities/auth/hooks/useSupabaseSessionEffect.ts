@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import useStore from '@/shared/hooks/useStore.ts';
 import { supabase } from '@/app/supabase/config';
 import { ANONYMOUS_ME } from '@/entities/auth/consts';
-import { uesAuthStore } from '@/entities/auth/hooks';
+import { uesAuthStore } from '@/entities/auth/model/store';
 import { MeProvider } from '@/entities/auth/model/types';
 import { MeService } from '@/entities/auth/services/MeService.ts';
 

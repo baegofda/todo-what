@@ -1,6 +1,6 @@
 import { Provider } from '@supabase/auth-js/src/lib/types.ts';
 
-import { SupabaseAuthService } from '@/app/supabase/services/SupabaseAuthService.ts';
+import { SupabaseAuthService } from '@/entities/auth/services/SupabaseAuthService.ts';
 import { Me } from '@/entities/auth/model/types';
 import { MeService } from '@/entities/auth/services/MeService.ts';
 import { ANONYMOUS_ME } from '@/entities/auth/consts';

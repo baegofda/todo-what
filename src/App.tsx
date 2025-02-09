@@ -1,7 +1,7 @@
-import { useSupabaseSessionEffect } from '@/app/supabase/hooks/useSupabaseSessionEffect.ts';
+import { useSupabaseSessionEffect } from '@/entities/auth/hooks/useSupabaseSessionEffect.ts';
 import { AuthService } from '@/entities/auth/services/AuthService.ts';
 import useStore from '@/shared/hooks/useStore.ts';
-import { uesAuthStore } from '@/entities/auth/hooks';
+import { uesAuthStore } from '@/entities/auth/model/store';
 
 function App() {
   const { signIn, signOut } = new AuthService();

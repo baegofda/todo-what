@@ -1,5 +1,5 @@
-import { Provider } from '@supabase/auth-js/src/lib/types.ts';
 import toast from 'react-hot-toast';
+import { Provider } from '@supabase/auth-js/src/lib/types.ts';
 
 import { supabase } from '@/app/supabase/config';
 
