@@ -3,6 +3,7 @@ import { AuthService } from '@/entities/auth/services/AuthService.ts';
 import useStore from '@/shared/hooks/useStore.ts';
 import { uesAuthStore } from '@/entities/auth/model/store';
 
+// 비로그인/로그인 CRUD
 function App() {
   const { signIn, signOut } = new AuthService();
   const { isLoadingStore: isLoadingAuthStore, store } = useStore(
