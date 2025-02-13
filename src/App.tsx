@@ -1,33 +1,41 @@
+import { Route, Routes } from 'react-router-dom';
+
+import HomeContainer from '@/pages/home/ui/HomeContainer.tsx';
+import LoginContainer from '@/pages/login/ui/LoginContainer.tsx';
+import AuthGuard from '@/app/routes/ui/AuthGuard.tsx';
 import { useSupabaseSessionEffect } from '@/entities/auth/hooks/useSupabaseSessionEffect.ts';
-import { AuthService } from '@/entities/auth/services/AuthService.ts';
-import useStore from '@/shared/hooks/useStore.ts';
-import { uesAuthStore } from '@/entities/auth/model/store';
+import AuthCallback from '@/pages/auth/AuthCallback.tsx';
+import RootContainer from '@/widgets/RootContainer.tsx';
+import Header from '@/widgets/Header.tsx';
+import Footer from '@/widgets/Footer.tsx';
 
-// 비로그인/로그인 CRUD
 function App() {
-  const { signIn, signOut } = new AuthService();
-  const { isLoadingStore: isLoadingAuthStore, store } = useStore(
-    uesAuthStore,
-    (state) => state,
-  );
-
   useSupabaseSessionEffect();
 
-  if (isLoadingAuthStore || !store) {
-    return null;
-  }
+  const layout = (
+    <>
+      <Header />
+      <RootContainer />
+      <Footer />
+    </>
+  );
 
-  const { isLoggedIn } = store;
+  return (
+    <Routes>
+      <Route element={layout}>
+        <Route element={<AuthGuard />}>
+          <Route path="/" element={<HomeContainer />} />
+        </Route>
+      </Route>
 
-  if (!isLoggedIn) {
-    return (
-      <button onClick={() => signIn({ provider: 'kakao' })}>로그인</button>
-    );
-  } else {
-    return (
-      <button onClick={() => signOut({ provider: 'kakao' })}>로그아웃</button>
-    );
-  }
+      <Route path="login" element={<LoginContainer />} />
+      <Route path="auth">
+        <Route path="callback" element={<AuthCallback />} />
+      </Route>
+
+      <Route path="*" element={<div>Not Found</div>} />
+    </Routes>
+  );
 }
 
 export default App;

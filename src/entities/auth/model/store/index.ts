@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 import { Me } from '@/entities/auth/model/types';
 
-export interface UesAuthStore {
+export interface useAuthStore {
   isLoggedIn: boolean;
   provider: Me['provider'] | null;
   setIsLoggedIn: ({ isLoggedIn }: { isLoggedIn: boolean }) => void;
@@ -11,8 +11,8 @@ export interface UesAuthStore {
   reset: () => void;
 }
 
-export const uesAuthStore = create(
-  persist<UesAuthStore>(
+export const useAuthStore = create(
+  persist<useAuthStore>(
     (set) => ({
       isLoggedIn: false,
       provider: null,
@@ -24,7 +24,7 @@ export const uesAuthStore = create(
     }),
     {
       version: 0,
-      name: 'uesAuthStore',
+      name: 'useAuthStore',
     },
   ),
 );

@@ -3,27 +3,21 @@ import { useEffect } from 'react';
 import useStore from '@/shared/hooks/useStore.ts';
 import { supabase } from '@/app/supabase/config';
 import { ANONYMOUS_ME } from '@/entities/auth/consts';
-import { uesAuthStore } from '@/entities/auth/model/store';
-import { MeProvider } from '@/entities/auth/model/types';
+import { useAuthStore } from '@/entities/auth/model/store';
 import { MeService } from '@/entities/auth/services/MeService.ts';
+import useSupabaseSessionSave from '@/entities/auth/hooks/useSupabaseSessionSave.ts';
 
 export const useSupabaseSessionEffect = () => {
-  const { saveMe, removeMe } = new MeService();
-  const { isLoadingStore: isLoadingAuthStore, store } = useStore(
-    uesAuthStore,
-    (state) => state,
-  );
+  const { removeMe } = new MeService();
+  const { store } = useStore(useAuthStore, (state) => state);
+  const { onSessionSave } = useSupabaseSessionSave();
 
   useEffect(() => {
-    if (
-      isLoadingAuthStore ||
-      !store ||
-      store['provider'] === ANONYMOUS_ME['provider']
-    ) {
+    if (!store || store['provider'] === ANONYMOUS_ME['provider']) {
       return;
     }
 
-    const { setIsLoggedIn, setProvider, reset } = store;
+    const { reset } = store;
 
     // https://supabase.com/docs/reference/javascript/auth-onauthstatechange
     const {
@@ -35,34 +29,24 @@ export const useSupabaseSessionEffect = () => {
           authChangeEvent === 'USER_UPDATED' ||
           authChangeEvent === 'TOKEN_REFRESHED')
       ) {
-        const { id, app_metadata, user_metadata } = session['user'];
-        const { provider = 'NONE' } = app_metadata;
         const {
-          email,
-          user_name: userName,
-          avatar_url: avatarUrl,
-        } = user_metadata;
-
-        saveMe({
           id,
-          provider: provider as MeProvider,
-          identifier: email,
-          avatarUrl,
-          userName,
-        });
-        setProvider({ provider: provider as MeProvider });
-        setIsLoggedIn({ isLoggedIn: true });
+          app_metadata: { provider },
+          user_metadata,
+        } = session['user'];
+
+        onSessionSave({ id, user_metadata, provider });
       }
 
       if (
         authChangeEvent === 'SIGNED_OUT' ||
         authChangeEvent === 'PASSWORD_RECOVERY'
       ) {
-        reset();
         removeMe();
+        reset();
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [isLoadingAuthStore, store]);
+  }, [store]);
 };
