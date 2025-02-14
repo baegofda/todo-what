@@ -1,12 +1,20 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { getTodoList, postTodo } from '@/entities/todolist/api';
 import { Todo, TodoInputProps } from '@/entities/todolist/model';
+
 
 const TodoInput = ({ setTodos }: TodoInputProps) => {
   const [todoContent, setTodoContent] = useState<Todo['content']>('');
 
   const onSubmit = async () => {
+    if(!todoContent) {
+      toast.error('입력하셈')
+
+      return
+    }
+
     setTodoContent('');
 
     try {
