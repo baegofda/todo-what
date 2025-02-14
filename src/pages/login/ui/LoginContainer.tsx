@@ -7,6 +7,7 @@ const LoginContainer = () => {
     <div>
       <button
         type={'button'}
+        className={'cursor-pointer text-yellow-300'}
         onClick={() => {
           signIn({ provider: 'kakao' });
         }}

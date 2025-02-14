@@ -19,7 +19,6 @@ function App() {
       <Footer />
     </>
   );
-
   return (
     <Routes>
       <Route element={layout}>
